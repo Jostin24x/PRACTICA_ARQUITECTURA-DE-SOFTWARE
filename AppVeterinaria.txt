@@ -1,0 +1,130 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Datos1 {
+    private String nDueño;
+    private String nMascota;
+    private int edad;
+    private String raza;
+    private double peso;
+    private String consulta;
+
+    public Datos1(String nDueño, String nMascota, int edad, String raza, double peso, String consulta) {
+        this.nDueño = nDueño;
+        this.nMascota = nMascota;
+        this.edad = edad;
+        this.raza = raza;
+        this.peso = peso;
+        this.consulta = consulta;
+    }
+
+    public String getNDueño() {
+        return nDueño;
+    }
+
+    public String getNMascota() {
+        return nMascota;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public String getRaza() {
+        return raza;
+    }
+
+    public double getPeso() {
+        return peso;
+    }
+
+    public String getConsulta() {
+        return consulta;
+    }
+}
+
+public class AppVeterinaria {
+    private static ArrayList<Datos1> pacientes = new ArrayList<>();
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean salir = false;
+
+        while (!salir) {
+            System.out.println("Bienvenido a la Veterinaria");
+            System.out.println("1. Agregar paciente");
+            System.out.println("2. Ver lista de pacientes");
+            System.out.println("3. Salir");
+            System.out.print("Seleccione una opción: ");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea
+
+            switch (opcion) {
+                case 1:
+                    agregarPaciente(scanner);
+                    break;
+                case 2:
+                    verListaPacientes();
+                    break;
+                case 3:
+                    salir = true;
+                    break;
+                default:
+                    System.out.println("Opción inválida");
+            }
+        }
+
+        guardarDatosEnArchivo();
+        System.out.println("Gracias por usar la aplicación de la Veterinaria.");
+    }
+
+    private static void agregarPaciente(Scanner scanner) {
+        System.out.print("Ingrese el nombre del dueño: ");
+        String nDueño = scanner.nextLine();
+        System.out.print("Ingrese el nombre de la mascota: ");
+        String nMascota = scanner.nextLine();
+        System.out.print("Ingrese la edad de la mascota: ");
+        int edad = scanner.nextInt();
+        scanner.nextLine(); // Consumir el salto de línea
+        System.out.print("Ingrese la raza de la mascota: ");
+        String raza = scanner.nextLine();
+        System.out.print("Ingrese el peso de la mascota: ");
+        double peso = scanner.nextDouble();
+        scanner.nextLine(); // Consumir el salto de línea
+        System.out.print("Ingrese la consulta de la mascota (vacunarse, operarse, enfermedad, etc.): ");
+        String consulta = scanner.nextLine();
+
+        Datos1 paciente = new Datos1(nDueño, nMascota, edad, raza, peso, consulta);
+        pacientes.add(paciente);
+        System.out.println("Paciente agregado correctamente.");
+    }
+
+    private static void verListaPacientes() {
+        if (pacientes.isEmpty()) {
+            System.out.println("No hay pacientes registrados.");
+        } else {
+            System.out.println("Lista de pacientes:");
+            for (Datos1 paciente : pacientes) {
+                System.out.println("Dueño: " + paciente.getNDueño() + ", Nombre de la mascota: " + paciente.getNMascota() +
+                        ", Edad: " + paciente.getEdad() + ", Raza: " + paciente.getRaza() + ", Peso: " + paciente.getPeso() + "kg" +
+                        ", Consulta: " + paciente.getConsulta());
+            }
+        }
+    }
+
+    private static void guardarDatosEnArchivo() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("pacientes.txt"))) {
+            for (Datos1 paciente : pacientes) {
+                writer.println(paciente.getNDueño() + "," + paciente.getNMascota() + "," +
+                        paciente.getEdad() + "," + paciente.getRaza() + "," + paciente.getPeso() + "," + paciente.getConsulta());
+            }
+            System.out.println("Datos guardados en pacientes.txt");
+        } catch (IOException e) {
+            System.err.println("Error al guardar los datos en el archivo.");
+            e.printStackTrace();
+        }
+    }
+}
